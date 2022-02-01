@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Profile of {{ profile.user.username }}
+{% endblock title %}
+
+{% block content %}
+
+    {% if user.is_authenticated and user == profile.user %}
+        <div class="col-10 d-flex justify-content-center py-5">
+            <div class="card text-center" style="width: 100%;">
+                <div class="text-center">
+                    <img class="img-thumbnail rounded" style="width: 25%" src="{{ profile.image.url }}" alt="">
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title my-4">{{ profile.user.username }}</h4>
+                    <p class="card-text">{{ profile.bio|safe }}</p>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <h2 class="py-5">You are not allowed to check this profile!</h2>
+    {% endif %}
+
+
+{% endblock content %}

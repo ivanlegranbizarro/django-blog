@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Create Category{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h2 class="py-5">Create your new categories here!</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-secondary btn-sm">Create category</button>
+        </form>
+    {% else %}
+        <h2 class="py-5">You need to be logged in to create a category!</h2>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Create your post
+{% endblock title %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h2 class="py-5">Create your new post here!</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary btn-sm m-3">Create</button>
+        </form>
+    {% else %}
+        <h2 class="py-5">You need to be logged in to create a post!</h2>
+    {% endif %}
+{% endblock content %}

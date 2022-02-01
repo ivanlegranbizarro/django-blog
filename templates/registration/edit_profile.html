@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Edit your account
+{% endblock %}
+
+
+{% block content %}
+    <h2 class="py-5">Update your account here!</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary btn-sm">Update</button>
+    </form>
+    <h5 class="pt-5">¿Do you want to chage your password?</h5>
+    <p>Do it <a href="{% url 'blog_app:change_password' %}">here</a></p>
+{% endblock %}
+

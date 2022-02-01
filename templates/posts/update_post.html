@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Update your post
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated and user == post.author %}
+        <h2 class="py-5">Update your post here!</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form|crispy }}
+            <a href="{% url 'blog_app:home' %}" class="btn btn-secondary btn-sm">Back</a>
+            <button type="submit" class="btn btn-warning btn-sm">Update</button>
+        </form>
+    {% else %}
+        <h2 class="py-5">You are not allowed to update this post!</h2>
+    {% endif %}
+{% endblock %}

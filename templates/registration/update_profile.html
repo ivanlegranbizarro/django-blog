@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Edit your user profile
+{% endblock %}
+
+{% block content %}
+    <h2 class="py-5">edit your user profile here!</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+    </form>
+{% endblock %}

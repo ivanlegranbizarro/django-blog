@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Welcome to my blog
+{% endblock title %}
+
+{% block content %}
+    <div class="row">
+        {% for post in posts %}
+            <div class="col-md-4 d-flex justify-content-center py-5">
+                <div class="card text-center" style="width: 100%;">
+                    {% if post.image.url %}
+                        <img class="card-img-top" src="{{ post.image.url }}" alt="">
+                    {% endif %}
+                    <div class="card-body">
+                        <a href="{% url 'blog_app:post_detail' slug=post.slug %}">
+                            <h4 class="card-title">{{ post.title }}</h4>
+                        </a>
+                        <p class="card-text">{{ post.content|truncatechars:100|safe }}</p>
+                        <p class="fw-lighter">{{ post.category }}</p>
+                        <p class="fw-light fst-italic">Posted by {{ post.author }}</p>
+                        <p class="fw-lighter">{{ post.created }}</p>
+
+                        {% if user.is_authenticated and user == post.author %}
+                            <a href="{% url 'blog_app:update_post' slug=post.slug %}"
+                               class="btn btn-warning btn-sm">Update</a>
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#modelId">
+                                Delete
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!-- Button trigger modal -->
+
+            <!-- Modal -->
+            <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Are you sure?</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                            <a href="{% url 'blog_app:delete_post' slug=post.slug %}" class="btn btn-danger">Yes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                var modelId = document.getElementById('modelId');
+
+                modelId.addEventListener('show.bs.modal', function (event) {
+                    // Button that triggered the modal
+                    let button = event.relatedTarget;
+                    // Extract info from data-bs-* attributes
+                    let recipient = button.getAttribute('data-bs-whatever');
+
+                    // Use above variables to manipulate the DOM
+                });
+            </script>
+
+        {% endfor %}
+    </div>
+{% endblock content %}

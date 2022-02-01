@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Add a new comment
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h2 class="py-5">Add a new comment to '{{ post.title }}'</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary btn-sm m-3">Add</button>
+        </form>
+    {% else %}
+        <h2 class="py-5">You need to be logged in to comment a post!</h2>
+    {% endif %}
+{% endblock %}

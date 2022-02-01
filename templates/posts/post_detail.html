@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Post detail of {{ post.title }}
+{% endblock title %}
+
+{% block content %}
+    <div class="row pt-5">
+        <div class="col-12 d-flex justify-content-center">
+            <div class="card text-center" style="width: 85%;">
+                <p class="fw-lighter">{{ post.category }}</p>
+                {% if post.image.url %}
+                    <img class="card-img-top" src="{{ post.image.url }}" alt="">
+                {% endif %}
+                <div class="card-body">
+                    <h4 class="card-title">{{ post.title }}</h4>
+                    <p class="card-text">{{ post.content|safe }}</p>
+                    <div class="d-flex justify-content-center my-4">
+                        {% if post.author.profile.image.url %}
+                            <img src="{{ post.author.profile.image.url }}" style="width: 10%" alt=""
+                                 class="card-img-bottom rounded-circle">
+                        {% else %}
+                            <img class="card-img-bottom rounded-circle"
+                                 src="{% static 'blog_app/images/default-profile.png' %}" alt="">
+                        {% endif %}
+                    </div>
+                    <p class="fw-light fst-italic">Posted by {{ post.author }}</p>
+                    <p class="fw-lighter">{{ post.created }}</p>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'blog_app:home' %}" class="fs-5 btn btn-outline-secondary btn-sm"
+                           style="height: fit-content"><i class="bi bi-backspace"></i></a>
+                        {% if user.is_authenticated %}
+                            <form action="{% url 'blog_app:like_post' %}" method="post">
+                                {% csrf_token %}
+                                {% if user not in post.liked.all %}
+                                    <button type="submit" class="fs-5 btn btn-outline-danger btn-sm my-2" name="post_id"
+                                            value="{{ post.id }}"><i class="bi bi-heart-fill"></i>
+                                    </button>
+                                {% else %}
+                                    <button type="submit" class="fs-5 btn btn-outline-dark btn-sm my-2"
+                                            name="post_id"
+                                            value="{{ post.id }}" id="dislike"><i
+                                            class="bi bi-hand-thumbs-down-fill"></i>
+                                    </button>
+                                {% endif %}
+                                Total Likes: {{ total_likes }}
+                            </form>
+                        {% endif %}
+                    </div>
+
+                    {% if user.is_authenticated and user == post.author %}
+                        <a href="{% url 'blog_app:update_post' slug=post.slug %}"
+                           class="btn btn-warning btn-sm">Update</a>
+                        <a href="{% url 'blog_app:update_post' slug=post.slug %}"></a>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#modelId">
+                            Delete
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Button trigger modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Are you sure?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                    <a href="{% url 'blog_app:delete_post' slug=post.slug %}" class="btn btn-danger">Yes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var modelId = document.getElementById('modelId');
+
+        modelId.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            let button = event.relatedTarget;
+            // Extract info from data-bs-* attributes
+            let recipient = button.getAttribute('data-bs-whatever');
+
+            // Use above variables to manipulate the DOM
+        });
+    </script>
+    <div class="row py-5">
+        <h2 class="py-5">Comments</h2>
+        {% if post.comments.all %}
+            {% for comment in post.comments.all %}
+                <div class="col-12 d-flex justify-content-center mb-3">
+                    <div class="card" style="width: 38rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">from {{ comment.name }} </h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ comment.created }}</h6>
+                            <p class="card-text">{{ comment.content|safe }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h3 class="py-5">No comments yet...</h3>
+            <p>Be the first to comment!</p>
+            <p><a href="{% url 'blog_app:create_comment' slug=post.slug %}">New comment</a></p>
+        {% endif %}
+    </div>
+
+{% endblock content %}

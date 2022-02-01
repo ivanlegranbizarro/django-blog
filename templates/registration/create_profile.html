@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Create your profile
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h2 class="py-5">Create your profile here!</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary btn-sm">Create profile</button>
+        </form>
+    {% else %}
+        <h2 class="py-5">You are not allowed to create a profile!</h2>
+    {% endif %}
+
+{% endblock %}
